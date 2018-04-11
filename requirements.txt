@@ -1,0 +1,6 @@
+Django==2.0.4
+psycopg2
+djangorestframework
+markdown
+django-filter
+django-debug-toolbar
