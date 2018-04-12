@@ -1,2 +1,6 @@
 .project
 .pydevproject
+metabaron/db.sqlite3
+metabaron/settings/production.py
+lookup/migrations/__pycache__
+lookup/migrations/__pycache__/*.pyc
