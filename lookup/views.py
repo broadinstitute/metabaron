@@ -7,9 +7,11 @@ from .serializers import LookupSerializer
 def index(request):
     return HttpResponse("Hello, world. ")
 
-class LookupViewSet(viewsets.ModelViewSet):
+class LookupViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint that allows Lookups to be viewed or edited.
+    API endpoint that allows Lookups to be viewed
+    Expect access token and possibly hint
     """
     queryset = Lookup.objects.all().order_by('-short_id')
     serializer_class = LookupSerializer
+    lookup_field = 'short_id'
