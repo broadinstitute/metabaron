@@ -5,4 +5,4 @@ from rest_framework import serializers
 class LookupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Lookup
-        fields = ('short_id','description','url','method','paramname','extraparams','basicauthid','basicauthsecret' )
+        fields = ('short_id','description','url','method','paramname','paramtype','extraparams','basicauthid','basicauthsecret' )
