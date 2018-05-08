@@ -45,7 +45,6 @@ def _decode_with_cert(token,key,hint=None):
             return jwtson
         except Exception as e:
             print("kid in token: Cannot be introspected in JWKS %s" % e)
-
     
 def checkJWKS(token):
     jwks = False
