@@ -11,34 +11,6 @@ import base64
 import six
 import struct
 
-from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicNumbers
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import serialization
-
-def _intarr2long(arr):
-    return int(''.join(["%02x" % byte for byte in arr]), 16)
-
-
-def _base64_to_long(data):
-    if isinstance(data, six.text_type):
-        data = data.encode("ascii")
-
-    # urlsafe_b64decode will happily convert b64encoded data
-    _d = base64.urlsafe_b64decode(bytes(data) + b'==')
-    return _intarr2long(struct.unpack('%sB' % len(_d), _d))
-
-def _get_pem(key):
-    exponent = _base64_to_long(key['e'])
-    modulus = _base64_to_long(key['n'])
-    numbers = RSAPublicNumbers(exponent, modulus)
-    public_key = numbers.public_key(backend=default_backend())
-    pem = public_key.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo
-    )
-    return pem
-
-
 def get_token(request):
     token=None
     try:
@@ -64,29 +36,15 @@ def _decode_with_cert(token,key,hint=None):
     pubcert = None
     jwtson = None
     
-    tokendecode = jwt.decode(token, verify=False)
+    tokendecode = jjws.get_unverified_claims(token)
     tokenkid = jjws.get_unverified_header(token).get("kid")
 
     if (tokenkid and kid) and (kid==tokenkid):
         try:
-            jwtson = jjwt.decode(token, key, algorithms='RS256', options={"verify_aud":False})
+            jwtson = jjwt.decode(token, key, algorithms='RS256', audience=hint)
             return jwtson
         except Exception as e:
-            print("kid in token %s" % e)
-
-    
-    if (hint and kid):
-        try:
-            jwtson = jjwt.decode(token, key,audience=hint,algorithms=['RS256'])
-            return jwtson
-        except Exception as e:
-            print("hinted %s" % e)
-            
-    try:
-        jwtson = jjwt.decode(token, key, algorithms='RS256')
-        return jwtson
-    except Exception as e:
-        print("no hint %s" % e)
+            print("kid in token: Cannot be introspected in JWKS %s" % e)
 
     
 def checkJWKS(token):
