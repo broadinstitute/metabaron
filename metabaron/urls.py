@@ -18,14 +18,15 @@ from django.urls import path,include
 from django.conf.urls import url, include
 
 from rest_framework import routers
-from lookup import views
+from lookup import views as lookupviews
 
 router = routers.DefaultRouter()
-router.register(r'lookups', views.LookupViewSet)
+router.register(r'lookups', lookupviews.LookupViewSet)
 
 
 urlpatterns = [
     path('lookup/', include('lookup.urls')),
+    url(r'introspect/', lookupviews.IntrospectList.as_view()),
     path('admin/', admin.site.urls),
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))    

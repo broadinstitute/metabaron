@@ -4,3 +4,8 @@ djangorestframework
 markdown
 django-filter
 django-debug-toolbar
+requests
+pyjwt
+pycrypto
+cryptography
+python-jose

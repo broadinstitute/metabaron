@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator 
+from django.db.models.fields import URLField
 
 METHODS= (
     ('GET', 'GET'),
@@ -17,7 +18,13 @@ PARAMTYPE = (
 #method = GET
 #paramname = access_token
 #extraparams = None
+#paramtype = 'QUERY'
+#end result = https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=<TOKEN>
 
+
+class JWKSUri(models.Model):
+    URL = models.URLField(max_length=200,blank=False, null=False, unique=True, help_text="JWKS URI")
+    hint = models.CharField(max_length=200,blank=True,null=True,help_text="if a JWT token is expected to match some parameter in the JWKS to better match tokens to URIs")
 
 class Lookup(models.Model):
     short_id = models.CharField(max_length=200,blank=False,null=False,unique=True,validators=[
