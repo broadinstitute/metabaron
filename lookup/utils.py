@@ -41,7 +41,7 @@ def _decode_with_cert(token,key,hint=None):
 
     if (tokenkid and kid) and (kid==tokenkid):
         try:
-            jwtson = jjwt.decode(token, key, algorithms='RS256', audience=hint)
+            jwtson = jjwt.decode(token, key, algorithms='RS256', options={'verify_aud': False})
             return jwtson
         except Exception as e:
             print("kid in token: Cannot be introspected in JWKS %s" % e)
@@ -51,6 +51,8 @@ def checkJWKS(token):
     tokendecode = None
     tokendecodeheader = None
     pubcert = None
+    message = None
+    #not a JWT at all -- not an error condition, just a reality.
     try:
         tokendecode = jjws.get_unverified_claims(token)
         tokendecodeheader = jjws.get_unverified_header(token)
@@ -59,17 +61,11 @@ def checkJWKS(token):
         print(e)
         return False
     
-    if not jwks:
-        return False
-
     for uri in JWKSUri.objects.all():
         jwks_json = _getjwks(uri.URL)
         if not jwks_json:
             break
         for key in jwks_json.get('keys',None):
-            #if hint in uri, use that to get cert
-            #if kid in token, use that to get cert
-            #otherwise try them all
             try:
                 jwks = _decode_with_cert(token,key,hint=uri.hint)
                 if jwks:

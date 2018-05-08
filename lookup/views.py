@@ -8,8 +8,6 @@ from rest_framework.response import Response
 from rest_framework import status,generics
 from .utils import get_token,checkJWKS
 
-
-
 def index(request):
     return HttpResponse("Hello, world. ")
 
@@ -40,10 +38,11 @@ class IntrospectList(generics.ListCreateAPIView):
         queryset = self.get_queryset()
         token=get_token(request)
         if not token:
-            return Response({"message":"NO Token"})
+            return Response(data={"error":"NO Token"},status=500)
         
         #if jwt try JWKS first
         jwks = checkJWKS(token)
         if jwks:
-            return Response(jwks)
-        return Response(request.data)
+            return Response(jwks,status=200)
+        
+        return Response(data={"error":"Token cannot be introspected"},status=401)

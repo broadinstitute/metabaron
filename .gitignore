@@ -2,5 +2,7 @@
 .pydevproject
 metabaron/db.sqlite3
 metabaron/settings/production.py
+lookup/__pycache__
+lookup/management/__pycache__
 lookup/migrations/__pycache__
 lookup/migrations/__pycache__/*.pyc
