@@ -92,9 +92,6 @@ def _introspect(endpoint,payload,header):
             headers=header
             )
 
-    print(header)
-    print(payload)
-
     if not r:
         return None
     return r.json()
