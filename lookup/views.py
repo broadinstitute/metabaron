@@ -6,7 +6,7 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,generics
-from .utils import get_token,checkJWKS
+from .utils import get_token,checkJWKS, checkOpaque
 
 def index(request):
     return HttpResponse("Hello, world. ")
@@ -44,5 +44,9 @@ class IntrospectList(generics.ListCreateAPIView):
         jwks = checkJWKS(token)
         if jwks:
             return Response(jwks,status=200)
+        
+        opaque = checkOpaque(token)
+        if opaque:
+            return Response(opaque,status=200)
         
         return Response(data={"error":"Token cannot be introspected"},status=401)

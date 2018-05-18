@@ -75,3 +75,40 @@ def checkJWKS(token):
                 continue
         continue
     return False
+
+def _introspect(endpoint,payload,header):
+    r = None
+    if endpoint.method=="GET":
+        r = requests.get(
+            endpoint.url,
+            params=payload,
+            headers=header
+            )
+    if endpoint.method=="POST":
+        header.update({"Content-Type": "application/x-www-form-urlencoded"})        
+        r = requests.post(
+            endpoint.url,
+            data=payload,
+            headers=header
+            )
+
+    print(header)
+    print(payload)
+
+    if not r:
+        return None
+    return r.json()
+
+def checkOpaque(token):
+    opaque=False
+    for endpoint in Lookup.objects.all():
+        payload,header = endpoint.constructIntrospection(token)
+
+        try:
+            opaque = _introspect(endpoint,payload,header)
+            if opaque:
+                return opaque 
+        except Exception as e:
+            print("Opaque failed %s:" % e)
+            continue
+    return False

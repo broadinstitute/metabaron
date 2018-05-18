@@ -1,0 +1,24 @@
+[
+	{
+	    "pk": 1000, 
+	    "model": "lookup.Lookup", 
+	    "fields": {
+	    	"short_id": "google",
+	    	"url": "https://www.googleapis.com/oauth2/v1/tokeninfo",
+	    	"method":"GET",
+	    	"paramname":"access_token",
+	    	"paramtype":"QUERY"
+	    }
+	},
+	{
+	    "pk": 2000, 
+	    "model": "lookup.Lookup", 
+	    "fields": {
+	    	"short_id": "globus",
+	    	"url": "https://auth.globus.org/v2/oauth2/token/introspect",
+	    	"method":"POST",
+	    	"paramname":"token",
+	    	"paramtype":"QUERY"
+	    }
+	}	
+]

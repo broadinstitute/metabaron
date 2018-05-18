@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator 
 from django.db.models.fields import URLField
+from base64 import b64encode,b64decode
 
 METHODS= (
     ('GET', 'GET'),
@@ -41,10 +42,28 @@ class Lookup(models.Model):
     method = models.CharField(max_length=5,choices=METHODS,blank=False,null=False, help_text="HTTP method of access of URL")
     paramname = models.CharField(max_length=100,blank=False,null=False, default='token',help_text="What is the parameter name for the access_token to passed to URL (usually it's something like access_token)")
     paramtype = models.CharField(max_length=100,default="QUERY",choices=PARAMTYPE,blank=False,null=False,help_text="How are we passing the token to the introspector?")
-    extraparams = models.CharField(max_length=200,blank=True,null=True, help_text="Extra querystring parameters")    
+    extraparams = models.CharField(max_length=200,blank=True,null=True, help_text="Extra querystring parameters in comma-separated name:value pairs")    
     basicauthid = models.CharField(max_length=200,blank=True,null=True, help_text="If userinfo uses basic auth")    
     basicauthsecret = models.CharField(max_length=200,blank=True,null=True, help_text="If userinfo uses basic auth")    
 
-    
-    #basic auth stuff if required
-    #
+    def __str__(self):
+        return self.short_id
+
+    def constructIntrospection(self,token):
+        url=None
+        paramstring=None
+        payload={}
+        authheader=None
+        if self.paramtype=="QUERY":
+            payload.update({self.paramname:token})
+        if self.paramtype=="HEADER":
+            authheader.update({"Authorization":paramname+" "+token})
+        if self.extraparams:
+            params = [x.strip() for x in extraparams.split(',')]
+            dict = {k:v for k,v in (x.split(':') for x in params) }
+            payload.update(dict)
+        if self.basicauthid and self.basicauthsecret:
+            username_password = '%s:%s' % (self.basicauthid,self.basicauthsecret)
+            userAndPass = b64encode(username_password.encode()).decode()
+            authheader={"Authorization":"Basic "+userAndPass}
+        return payload,authheader,    
