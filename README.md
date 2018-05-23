@@ -11,3 +11,10 @@ Alter `metabaron/scripts/start.sh` if you want a different username/password as 
 
 # first login
 go to `http://localhost:8000/admin/` or however you set it up and use your username/password. Add JWKS URLs if they exist and add Introspection endpoints. Google is there by default. 
+
+# docker and docker-compose
+```
+docker-compose -f docker-compose.yaml -p metabaron build
+docker-compose -f docker-compose.yaml -p metabaron up
+```
+You might want to alter `metabaron/settings/dockercompose.py` to fit you. You might want to alter `scripts/nginx.conf`. This is where you'd do ssl via nginx (recommended). 
