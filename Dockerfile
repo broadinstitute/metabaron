@@ -1,17 +1,17 @@
 FROM python:3.6
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /code
-WORKDIR /code
-ADD requirements.txt /code/
-RUN pip install -r requirements.txt
-ADD metabaron /code/
-ADD manage.py /code/
-ADD scripts /code/
+COPY . /code/
+RUN pip install -r /code/requirements.txt
 
-COPY /code/scripts/entrypoint.sh /code/
-COPY /code/scripts/start.sh /code/
+RUN cp /code/scripts/entrypoint.sh /code/
+RUN cp /code/scripts/start.sh /code/
+RUN cp /code/scripts/gunicorn_start.sh /code/
 
 RUN chmod +x /code/start.sh
 RUN chmod +x /code/entrypoint.sh
+RUN chmod +x /code/gunicorn_start.sh
 
-ENTRYPOINT ["/code/entrypoint.sh"]
+#RUN apt-get update && apt-get install -y gunicorn
+WORKDIR /code
+CMD ["/code/entrypoint.sh"]

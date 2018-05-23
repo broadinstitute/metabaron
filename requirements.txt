@@ -9,3 +9,4 @@ pyjwt
 pycrypto
 cryptography
 python-jose
+gunicorn
