@@ -10,7 +10,7 @@ format for sending to metabaron:
 Alter `metabaron/scripts/start.sh` if you want a different username/password as your admin. You can change after startup, too.  
 
 # first login
-go to `http://localhost:8000/admin/` or however you set it up and use your username/password. Add JWKS URLs if they exist and add Introspection endpoints. Google is there by default. 
+go to `http://localhost:8000/admin/` or however you set it up and use your username/password. Add JWKS URLs if they exist and add Introspection endpoints. Google and Globus are there by default. Globus Introspection will need clientID and Secret to auth to their endpoint.
 
 # docker and docker-compose
 ```
