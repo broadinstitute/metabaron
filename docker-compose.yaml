@@ -15,7 +15,7 @@ services:
     links: 
       - app:app
     ports:
-      - "80:80"
+      - "81:80"
     volumes:
       - ./scripts/nginx.conf:/etc/nginx/conf.d/app.conf
       - /Users/dbernick/Code/sharedstatic:/code/static
